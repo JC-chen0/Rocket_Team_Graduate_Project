@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--頁面設定-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script
+        src="https://s3.ap-northeast-2.amazonaws.com/jambolive.tv/static/js/underscore/1.9.1/underscore-min.js"></script>
+    <script
+        src="https://s3.ap-northeast-2.amazonaws.com/jambolive.tv/static/js/jquery/3.2.1/jquery-3.2.1.min.js"></script>
+    <script src="https://s3.ap-northeast-2.amazonaws.com/jambolive.tv/static/js/plugin.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+
+    <!--前期準備-->
+    {%load static%}
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/training.css'%}">
+    <link rel="stylesheet" href="{% static 'css/hover_focus.css'%}">
+    <script src="{% static 'js/fixed_header.js' %}">
+    </script>
+    <script src="{% static 'js/hover_focus.js' %}"></script>
+
+    <!--bootstrap & Jquery 放置處-->
+    <script src="../static/jquery-3.6.0.js"></script>
+    <script src="../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link href="../static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css">
+
+    <!--datepicker套件放置處-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+
+    <title>策略小助手</title>
+
+    <!--將csrf token建為全域變數，以供外部js檔使用-->
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="wrapper site-header-wrapper clear">
+            <h1 class="site-logo">
+                <img src="{% static 'img/witty_arial_logo.png' %}" alt="Witty" title="Witty">
+            </h1>
+
+            <h2 class="page-title theme ml1">
+                <span class="line line1"></span>
+                <span class="letters">訓練小幫手</span>
+                <span class="line line2"></span>
+            </h2>
+            <nav>
+                <ul class="owner_head-tool float-l align-c">
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"
+                            class="btn-reg btn-nr f-line f-lg">直播小幫手</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"
+                            class="btn-reg btn-nr f-line f-lg">訂單小幫手</a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"
+                            class="btn-reg btn-nr f-line f-lg">出貨小幫手</a>
+                    </li>
+                    <li>
+                        <a href="/fill_form/" target="_blank" class="btn-reg btn-nr f-line f-lg">表單小幫手</a>
+                    </li>
+                    <li>
+                        <a href="/analysis/" target="_blank" class="btn-reg btn-nr f-line f-lg">分析小幫手</a>
+                    </li>
+                    <li>
+                        <a href="/training_data/" target="_blank" class="btn-reg btn-nr f-line f-lg">訓練小幫手</a>
+                    </li>
+                </ul>
+                <!--owner_head-tool end-->
+            </nav>
+            <div class="account float-r align-r">
+                <div class="store-name theme ellipsis f-xlg f-bold" style=" padding-right: 8 px ;">嗚依替 </div>
+                <div> <a href="/console/setting/">設定</a> / <span id="fb"
+                        style="cursor: pointer; color: #4285F4;">切換帳號</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="item1" class="item"> 這是回音你懂嗎<br>是回音你懂嗎<br>回音你懂嗎<br>音你懂嗎<br>你懂嗎<br>懂嗎<br>嗎
+        <b class="item-close js-popup-close">x</b>
+    </div>
+
+    <div class="container" id="fixed-header">
+        <div class="search-bar-container row">
+            <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2">
+            </div>
+            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+                <input type="search" class="light-table-filter" data-table="comment-table" id="searchInput"
+                    placeholder="搜尋留言">
+            </div>
+        </div>
+        <div class="main-container row">
+            <!-- 給觀看留言種類 -->
+            <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2 selected-box">
+                <div class="btn-container">
+                    <button class="btn1 btn-help">訓練說明</Button>
+                </div>
+            </div>
+            <!-- 呈現內容 -->
+            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 comment-box">
+                <header class="training-header">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <input type="checkbox" class="comment-check-box simple-focus" id="clickAll" title="全選">
+                        </div>
+                        <div class="col-xs-2">
+                        </div>
+                        <div class="col-xs-8 training_panel_header row ">
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-2 ">
+                                <label>意圖：</label>
+                                <select class="form-select " aria-label="Default select example " id="intent0">
+                                    <option selected>選擇 intent</option>
+                                    <option value="1 ">商品</option>
+                                    <option value="2 ">直播</option>
+                                    <option value="3 ">配送</option>
+                                    <option value="4 ">付款</option>
+                                    <option value="5 ">標數</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-2 ">
+                                <label>實體：</label>
+                                <select class="form-select " aria-label="Default select example " id="entity0">
+                                    <option selected>選擇 entity</option>
+                                    <option value="1 ">商品</option>
+                                    <option value="2 ">價格</option>
+                                    <option value="3 ">付款方式</option>
+                                    <option value="4 ">配送方式</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-1 ">
+                                <button type="button" class=" btn-witty simple-focus btn" id="train">確認訓練</button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="training_panel row scrollable">
+                    <!-- {% for msg in message %}
+                    {% endfor %} -->
+                    <table class="comment-table">
+                        <tbody>
+                            {% for msg in message %}
+                            <tr>
+                                <td class="comment-td">
+                                    <div class="training_area row ">
+                                        <div class="form-check col-xs-12 ">
+                                            <div class="row ">
+                                                <div class="col-xs-1 checkbox-bar">
+                                                    <input type="checkbox" text="{{msg.text}} "
+                                                        class="form-check-input simple-focus"
+                                                        id="check{{forloop.counter0}} ">
+                                                </div>
+                                                <div class="col-xs-9 ">
+                                                    <div class="comment">
+                                                        <label class="form-check-label "
+                                                            for="check{{forloop.counter0}} ">
+                                                            {{msg.text}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="training_notice row ">
+            <blockquote>
+                <p>請根據以下留言，勾選相同意圖與實體的一起訓練 (這邊文字要調)</p>
+            </blockquote>
+        </div> -->
+
+        <!--網站公告 start -->
+        <!-- <div class="site-dialog server-billboard " style="display: none; ">
+			<header class="site-dialog-header " style="padding: 20px 25px; border-bottom: 2px solid #e75280;line-height: 1; background-color: white; ">
+				<h1 style="width: 15.8%; "><img src="https://s3.ap-northeast-2.amazonaws.com/jambolive.tv/static/console2/img/common/logo.png " alt=" " title="JoJambo " style="width: 100%; "></h1>
+				<h2 class="page-title theme " style="font-size: 18px; border-left: 1px solid #e75280; padding-left: 15px; line-height: 1; margin-left: 15px; ">
+				就醬播放送
+				</h2>
+			</header>
+			<div class="site-dialog-content " style="line-height: 180%; font-family: 'Microsoft Jhenghei', '微軟正黑體', 'Arial', sans-serif; font-size: 14px; color: #4c4c4c; padding: 10px 25px 40px 25px; ">
+				<p></p>
+			</div>
+			<footer style="position: absolute; bottom: 65px; width: 100%; text-align: center; ">
+				<input id = "billboard_read " type="checkbox " value= " " style="display: inline; ">
+				<label for="billboard_read "> 我已經詳細閱讀此則訊息</label><br>
+				<input id = "user_id " type="hidden " value="24024 " >
+			</footer>
+			</div> -->
+        <!-- 網站公告 end-->
+    </div>
+</body>
+<script src="{% static 'js/training_initialization.js' %} "></script>
+<script src="{% static 'jquery.popup.min.js' %}"></script>
+</html>
