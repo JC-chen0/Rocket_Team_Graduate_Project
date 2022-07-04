@@ -51,6 +51,8 @@ python db_operation.py --help
 
 # *Demo*
 
+## Streaming
+![](https://github.com/JC-chen0/Witty/blob/66347c765411754f9d2070f83a4c650aa655073b/demo/streaming-demo.gif?raw=true)
 
 ## Chart
 ![](https://github.com/JC-chen0/Witty/blob/a775b84ec78b28a48576268ea4f2e836b45fcfce/demo/%E5%8D%8A%E5%B9%B4%E6%9C%9F%E5%AD%98%E8%B2%A8%E5%91%A8%E8%BD%89%E7%8E%87.gif?raw=true)
